@@ -97,12 +97,22 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
-	private List<User> getUserByQuery(User user) {
+	public List<User> getUserByQuery(User user) {
 		List<User> list = userMapper.selectUsersByQuery(user);
 		list.forEach(u -> {
 			u.setAvatar(imgPrefix + u.getAvatar());
 		});
 		return list;
+	}
+	/**
+	 * 更新个人信息方法
+	 * @param updateUser
+	 * @param email
+	 */
+	public void updateUser(User updateUser, String email) {
+		updateUser.setEmail(email);
+	    BeanHelper.onUpdate(updateUser);
+	    userMapper.update(updateUser);
 	}
 	
 }
