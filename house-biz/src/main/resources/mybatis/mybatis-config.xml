@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- setting 经常用来配置缓存、延迟加载和分页设置。 -->
+	<settings>
+		<!-- 设置关闭 缓存 -->
+		<setting name="cacheEnabled" value="false"/>
+		<!-- 映射下划线到驼峰大小写 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- 使用生成的键 -->
+		<setting name="useGeneratedKeys" value="true"/>
+		<!-- 默认执行器类型 -->
+		<setting name="defaultExecutorType" value="REUSE"/>
+		<!-- 事务超时时间 -->
+		<setting name="defaultStatementTimeout" value="600"/>
+	</settings>
+	<!--typeAliases 使用别名，可以提高开发效率，简化配置。 -->
+	<typeAliases>
+		<typeAlias type="com.yu.house.common.model.User" alias="user"/>
+	</typeAliases>
+	<!--  -->
+	<mappers>
+		<mapper resource="mapper/userMapper.xml"></mapper>
+	</mappers>
+</configuration>
+
+
