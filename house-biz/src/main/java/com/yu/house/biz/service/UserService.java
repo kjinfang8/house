@@ -1,19 +1,16 @@
 package com.yu.house.biz.service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.common.base.Objects;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
 import com.yu.house.biz.mapper.UserMapper;
 import com.yu.house.common.model.User;
@@ -30,6 +27,8 @@ public class UserService {
 
 	@Value("${domain.name}")
 	private String domainName;
+	@Value("${file.prefix}")
+	private String imgPrefix;
 
 	@Autowired
 	private EmailService emailService;
@@ -47,12 +46,11 @@ public class UserService {
 	public boolean addAcount(User account) {
 		account.setPasswd(HashUtils.encryPassword(account.getPasswd()));
 		// 获取用户上传文件图片
-		System.err.println(" <-getAvatarFile()->" + account.getAvatarFile());// 获取文件路劲(对象)
 		List<String> imgeList = fileService.getImgePaths(//
 				Lists.newArrayList(account.getAvatarFile()));
 		System.err.println(" <----imgeList----------> " + imgeList.get(0));
-		
-		if (!imgeList.isEmpty()&&imgeList!=null) {// 不为空
+
+		if (!imgeList.isEmpty()) {// 不为空
 			account.setAvatar(imgeList.get(0));// 获取第一个
 		}
 		// 使用bean
@@ -64,4 +62,47 @@ public class UserService {
 		return true;
 	}
 
+	/**
+	 * 更改注册用户状态
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public boolean enable(String key) {
+		return emailService.enable(key);
+	}
+
+	/**
+	 * 用户登录验证
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public User auth(String username, String password) {
+		User user = new User();
+		user.setEmail(username);
+		user.setPasswd(HashUtils.encryPassword(password));
+		user.setEnable(1);
+		List<User> list = getUserByQuery(user);
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * sql查询
+	 * 
+	 * @param user
+	 * @return
+	 */
+	private List<User> getUserByQuery(User user) {
+		List<User> list = userMapper.selectUsersByQuery(user);
+		list.forEach(u -> {
+			u.setAvatar(imgPrefix + u.getAvatar());
+		});
+		return list;
+	}
+	
 }

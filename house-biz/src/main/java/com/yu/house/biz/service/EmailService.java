@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Objects;
@@ -26,6 +28,7 @@ import com.yu.house.common.model.User;
  *
  */
 @Service
+@Component
 public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
@@ -59,7 +62,7 @@ public class EmailService {
 			}).build();
 
 	/**
-	 * 发送邮件方法 1、缓存key-Email关系  2、借助spring email发送邮件 3、借助异步框架进行异步存在：Async
+	 * 发送邮件方法 1、缓存key-Email关系 2、借助spring email发送邮件 3、借助异步框架进行异步存在：Async
 	 * 
 	 * @param email
 	 */
@@ -69,8 +72,7 @@ public class EmailService {
 		// 缓存设置
 		registerCache.put(randomKey, email);
 		// 借助spring email发送邮件
-		String url = "http://" + domainName + "/accounts/verify?key=" //
-				+ randomKey;
+		String url = "http://" + domainName + "/accounts/verify?key=" + randomKey;
 		// 发送邮件
 		sendMail("房产平台激活邮件", url, email);
 	}
@@ -82,6 +84,7 @@ public class EmailService {
 	 * @param url
 	 * @param email
 	 */
+	@Async
 	public void sendMail(String title, String url, String email) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(from);//
@@ -89,6 +92,26 @@ public class EmailService {
 		message.setTo(email);// 发送 到用户邮箱
 		message.setText(url);// 邮件url
 		mailSender.send(message);
+	}
+
+	/**
+	 * 激活用户状态
+	 * @param key
+	 * @return
+	 */
+	public boolean enable(String key) {
+		// 获取邮件
+		String email = registerCache.getIfPresent(key);
+		if (StringUtils.isBlank(email)) {
+			return false;
+		}
+		User updateUser = new User();
+		updateUser.setEmail(email);
+		updateUser.setEnable(1);
+		//更新用户信息
+		userMapper.update(updateUser);
+		registerCache.invalidate(key);
+		return true;
 	}
 
 }

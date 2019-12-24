@@ -21,7 +21,8 @@ public class ResultMsg {
 
 	// 验证成功
 	public boolean isCuccess() {
-		return errorMsg == null;
+		errorMsg=null;
+		return true;
 	}
 
 	// 发送异常

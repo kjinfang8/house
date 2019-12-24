@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import comt.yu.house.autoconfig.EnableHttpClient;
 //(exclude= {DataSourceAutoConfiguration.class})
 
+//@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @SpringBootApplication
 @EnableHttpClient
 @EnableAsync

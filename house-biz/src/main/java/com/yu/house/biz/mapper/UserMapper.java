@@ -16,5 +16,7 @@ public interface UserMapper {
 	public int delete(String email);
 	//用户信息查询
 	public List<User> selectUsersByQuery(User user);
+	//更新用户信息方法
+	public int update(User updateUser);
 	
 }
