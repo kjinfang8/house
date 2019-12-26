@@ -18,13 +18,14 @@ import redis.clients.jedis.Jedis;
 
 /**
  * 房产列表分页查询显示
+ * 
  * @author jinfang
  *
  */
 @Service
 public class RecommendService {
 
-	private static final String HOT_HOUSE_KEY = "127.0.0.1";
+	private static final String HOT_HOUSE_KEY = "house";
 	private static final Logger logger = LoggerFactory.getLogger(RecommendService.class);
 
 	@Autowired
@@ -38,8 +39,8 @@ public class RecommendService {
 	 */
 	public List<House> getHotHouse(Integer size) {
 		House query = new House();
-		List<Long> list = getHot();//发现这里报错
-		//热门房产处理
+		List<Long> list = getHot();// 发现这里报错
+		// 热门房产处理
 		list = list.subList(0, Math.min(list.size(), size));
 		if (list.isEmpty()) {
 			return Lists.newArrayList();
@@ -47,7 +48,7 @@ public class RecommendService {
 		query.setIds(list);
 		final List<Long> order = list;
 		List<House> houses = houseService.queryAndSetImg(query, PageParams.build(size, 1));
-		//热门房产处理
+		// 热门房产处理
 		Ordering<House> houseSort = Ordering.natural().onResultOf(hs -> {
 			return order.indexOf(hs.getId());
 		});
@@ -56,6 +57,7 @@ public class RecommendService {
 
 	/**
 	 * 获取主机
+	 * 
 	 * @return
 	 */
 	private List<Long> getHot() {
@@ -71,21 +73,34 @@ public class RecommendService {
 			return Lists.newArrayList();
 		}
 	}
+
 	/**
 	 * 增强-房产列表分页查询显示
+	 * 
 	 * @param id
 	 */
 	public void increase(Long id) {
 		try {
-			Jedis jedis = new Jedis("127.0.0.1");//连接redis服务器地址
-			jedis.zincrby(HOT_HOUSE_KEY, 1.0D, id+"");
-			//0代表第一个元素,-1代表最后一个元素，保留热度由低到高末尾10个房产
+			Jedis jedis = new Jedis("127.0.0.1");// 连接redis服务器地址
+			jedis.zincrby(HOT_HOUSE_KEY, 1.0D, id + "");
+			// 0代表第一个元素,-1代表最后一个元素，保留热度由低到高末尾10个房产
 			jedis.zremrangeByRank(HOT_HOUSE_KEY, 0, -11);
 			jedis.close();
 		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
+	/**
+	 * 首页房产推荐
+	 * 
+	 * @return
+	 */
+	public List<House> getLastest() {
+		House query = new House();
+		query.setSort("create_time");
+		List<House> houses = houseService.queryAndSetImg(query, new PageParams(8, 1));
+		return houses;
+	}
 
 }

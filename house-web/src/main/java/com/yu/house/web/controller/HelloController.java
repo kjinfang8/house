@@ -25,12 +25,4 @@ public class HelloController {
     modelMap.put("user", one);
     return "hello";
   }
-  /**
-   * 返回首页
-   * @return
-   */
-  @RequestMapping("index")
-  public String index() {
-	  return "homepage/index";
-  }
 }
