@@ -35,7 +35,7 @@ public class HouseService {
 	private AgencyService agencyService;
 	@Autowired
 	private EmailService mailService;
-	
+
 	/**
 	 * 1.查询小区 2.添加图片服务器地址前缀 3.构建分页结果
 	 * 
@@ -136,10 +136,12 @@ public class HouseService {
 		houseUser.setType(collect ? HouseUserType.BOOKMARK.value : HouseUserType.SALE.value);
 		BeanHelper.setDefaultProp(houseUser, HouseUser.class);
 		BeanHelper.onInsert(houseUser);
-		houseMapper.insertHouseUser(houseUser);//开始绑定
+		houseMapper.insertHouseUser(houseUser);// 开始绑定
 	}
+
 	/**
 	 * 详细房屋查询
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -147,32 +149,69 @@ public class HouseService {
 		House query = new House();
 		query.setId(id);
 		List<House> houses = queryAndSetImg(query, PageParams.build(1, 1));
-		if(!houses.isEmpty()) {
+		if (!houses.isEmpty()) {
 			return houses.get(0);
 		}
 		return null;
 	}
+
 	/**
-	 * 查询关联经纪人
-	 * 获取经纪人与房屋绑关系
+	 * 查询关联经纪人 获取经纪人与房屋绑关系
+	 * 
 	 * @param houseId
 	 * @return
 	 */
 	public HouseUser getHouseUser(Long houseId) {
-		HouseUser houseUser =  houseMapper.selectSaleHouseUser(houseId);
+		HouseUser houseUser = houseMapper.selectSaleHouseUser(houseId);
 		return houseUser;
 	}
+
 	/**
 	 * 用户留言方法
+	 * 
 	 * @param userMsg
 	 */
 	public void addUserMsg(UserMsg userMsg) {
 		BeanHelper.onInsert(userMsg);
 		houseMapper.insertUserMsg(userMsg);
 		User agent = agencyService.getAgentDeail(userMsg.getAgentId());
-		//发送邮件
-		mailService.sendMail("来自用户"+userMsg.getEmail()+"的留言",//
+		// 发送邮件
+		mailService.sendMail("来自用户" + userMsg.getEmail() + "的留言", //
 				userMsg.getMsg(), agent.getEmail());
+	}
+
+	/**
+	 * 评分
+	 * 
+	 * @param id
+	 * @param rating
+	 */
+	public void updateRating(Long id, Double rating) {
+		House house = queryOneHouse(id);
+		Double oldRating = house.getRating();
+		Double newRating = oldRating.equals(0D) ? rating : Math.min((oldRating + rating) / 2, 5);
+		House updateHouse = new House();
+		updateHouse.setId(id);
+		updateHouse.setRating(newRating);
+		BeanHelper.onUpdate(updateHouse);
+		houseMapper.updateHouse(updateHouse);
+
+	}
+
+	/**
+	 * 删除收藏
+	 * 设置房产收藏状态为假
+	 * 收藏删除房产与用户绑定
+	 * @param id
+	 * @param userId
+	 * @param type
+	 */
+	public void unbindUser2House(Long id, Long userId, HouseUserType type) {
+		if (type.equals(HouseUserType.SALE)) {
+			houseMapper.downHouse(id);//设置房产收藏状态为假
+		} else {
+			houseMapper.deleteHouseUser(id, userId, type.value);//收藏删除房产与用户绑定
+		}
 	}
 
 }

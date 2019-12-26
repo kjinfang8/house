@@ -32,6 +32,13 @@ public interface HouseMapper {
 	public HouseUser selectSaleHouseUser(Long id);
 	//用户留言方法
 	public int insertUserMsg(UserMsg userMsg);
+	//房产评分
+	public void updateHouse(House updateHouse);
+	//设置房产收藏状态为假
+	public  int downHouse(Long id);
+	//收藏删除房产与用户绑定
+	public int deleteHouseUser(@Param("id")Long id,@Param("userId") Long userId,@Param("type") Integer value);
+	
 
 	
 	
