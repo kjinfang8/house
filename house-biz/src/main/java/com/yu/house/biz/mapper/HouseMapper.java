@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yu.house.common.model.Community;
 import com.yu.house.common.model.House;
+import com.yu.house.common.model.HouseUser;
 import com.yu.house.common.model.User;
+import com.yu.house.common.model.UserMsg;
 import com.yu.house.common.page.PageParams;
 
 @Mapper
@@ -18,9 +20,19 @@ public interface HouseMapper {
 	public Long selectPageCount(@Param("house") House query);
 	//添加用户
 	public int insert(User account);
+	//添加房产
+	public int insert(House house);
 	//查询小区
 	public List<Community> selectCommunity(Community community);
-	
+	//绑定查询
+	public HouseUser selectHouseUser(@Param("userId")Long userId,@Param("id") Long houseId,@Param("type") Integer integer);
+	//用户与房产绑定方法
+	public int insertHouseUser(HouseUser houseUser);
+	//查询关联经纪人
+	public HouseUser selectSaleHouseUser(Long id);
+	//用户留言方法
+	public int insertUserMsg(UserMsg userMsg);
+
 	
 	
 }

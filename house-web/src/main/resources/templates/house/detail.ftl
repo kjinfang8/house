@@ -193,7 +193,7 @@
                                                 </div>
                                     <header><h2 class="no-border">Comments</h2></header>
                                     <ul class="comments">
-                                      <#list commentList as comment> 
+                                      <!--<#list commentList as comment> 
                                         <li class="comment" style="width: 830px;">
                                             <figure>
                                                 <div class="image">
@@ -208,7 +208,7 @@
                                                 <hr>
                                             </div>
                                         </li>
-                                      </#list>
+                                      </#list>-->
                                     </ul>
                                 </section>
                             </div><!-- /.col-md-12 -->
@@ -242,7 +242,7 @@
                                 </div><!-- /.form-group -->
                             </form><!-- /#form-map -->
                         </aside><!-- /#edit-search -->
-                        <aside id="featured-properties">
+                       <aside id="featured-properties">
                             <header><h3>热门房产</h3></header>
                             <#list recomHouses as house>
                             <div class="property small">

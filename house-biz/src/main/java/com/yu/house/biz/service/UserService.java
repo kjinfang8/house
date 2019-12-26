@@ -2,14 +2,10 @@ package com.yu.house.biz.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.common.collect.Lists;
 import com.yu.house.biz.mapper.UserMapper;
@@ -113,6 +109,20 @@ public class UserService {
 		updateUser.setEmail(email);
 	    BeanHelper.onUpdate(updateUser);
 	    userMapper.update(updateUser);
+	}
+	/**
+	 * 获取用户id
+	 * @param id
+	 * @return
+	 */
+	public User getUserById(Long id) {
+		User queryUser = new User();
+		queryUser.setId(id);
+		List<User> users = getUserByQuery(queryUser);
+		if(!users.isEmpty()) {
+			return users.get(0);
+		}
+		return null;
 	}
 	
 }

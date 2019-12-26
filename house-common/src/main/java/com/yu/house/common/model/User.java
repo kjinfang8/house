@@ -5,7 +5,7 @@ import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 
 public class User {
-	private Integer id;// 用户id
+	private Long id;// 用户id
 	private String name;// 用户名称
 	private String phone;// 用户电话
 	private String email;// 用户邮箱
@@ -24,7 +24,7 @@ public class User {
 	
 	
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 	public String getConfirmPasswd() {
@@ -33,7 +33,7 @@ public class User {
 	public void setConfirmPasswd(String confirmPasswd) {
 		this.confirmPasswd = confirmPasswd;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {

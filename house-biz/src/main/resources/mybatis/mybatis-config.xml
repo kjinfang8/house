@@ -22,11 +22,16 @@
 		<typeAlias type="com.yu.house.common.model.User" alias="user"/>
 		<typeAlias type="com.yu.house.common.model.House" alias="house"/>
 		<typeAlias type="com.yu.house.common.model.Community" alias="community"/>
+		<typeAlias type="com.yu.house.common.model.HouseUser" alias="houseUser" />
+		<typeAlias type="com.yu.house.common.model.Comment" alias="comment" />
+		<typeAlias type="com.yu.house.common.model.Agency" alias="agency" />	
 	</typeAliases>
 	<!--  -->
 	<mappers>
-		<mapper resource="mapper/userMapper.xml"></mapper>
-		<mapper resource="mapper/houseMapper.xml"></mapper>
+		<mapper resource="mapper/userMapper.xml"/>
+		<mapper resource="mapper/houseMapper.xml"/>
+		<mapper resource="mapper/commentMapper.xml"/> 
+		<mapper resource="mapper/agencyMapper.xml"/>
 	</mappers>
 </configuration>
 

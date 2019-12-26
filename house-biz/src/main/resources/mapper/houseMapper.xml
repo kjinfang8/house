@@ -149,6 +149,51 @@
 			</if>
 		</where>
 	</select>
-
-
+	<!-- 用户与房产绑定查询 -->
+	<select id="selectHouseUser" resultType="houseUser">
+		select
+		id,house_id,user_id,create_time,type
+		from house_user
+		where house_id =
+		#{id} and user_id = #{userId} and type = #{type}
+	</select>
+	<!-- 用户与房产绑定 -->
+	<insert id="insertHouseUser">
+		insert into house_user (house_id,
+		user_id,
+		create_time,
+		type)
+		value(
+		#{houseId},
+		#{userId},
+		#{createTime},
+		#{type}
+		)
+	</insert>
+	<!-- 查询关联经纪人 -->
+	<select id="selectSaleHouseUser" resultType="houseUser">
+		select
+		id,house_id,user_id,create_time,type
+		from house_user
+		where house_id =
+		#{id} and type = 1
+		limit 1
+	</select>
+	<!-- 用户留言 -->
+	<insert id="insertUserMsg">
+		insert into house_msg (
+		msg,
+		create_time,
+		user_name,
+		house_id,
+		agent_id
+		)
+		value(
+		#{msg},
+		#{createTime},
+		#{userName},
+		#{houseId},
+		#{agentId}
+		)
+	</insert>
 </mapper>

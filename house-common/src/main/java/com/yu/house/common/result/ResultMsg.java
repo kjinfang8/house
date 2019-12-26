@@ -33,9 +33,9 @@ public class ResultMsg {
 	}
 
 	// 信息状态
-	public static ResultMsg successMsg(String successMsg) {
+	public static ResultMsg successMsg(String successMsgs) {
 		ResultMsg resultMsg = new ResultMsg();
-		resultMsg.setSuccessMsg(successMsg);
+		resultMsg.setSuccessMsg(successMsgs);
 		return resultMsg;
 	}
 
@@ -59,8 +59,7 @@ public class ResultMsg {
 						}
 					}
 				});
-		return Joiner.on("&").useForNull("")//
-				.withKeyValueSeparator("=").join(newMap);
+		return Joiner.on("&").useForNull("").withKeyValueSeparator("=").join(newMap);
 	}
 
 	// getter、setter
